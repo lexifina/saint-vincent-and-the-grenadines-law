@@ -1,0 +1,2 @@
+# Transitional provision 10. Protection from inhuman treatment
+Nothing contained in or done under the authority of any law shall be held to be inconsistent with or in contravention of section 5 of the Constitution to the extent that the law in question authorises the infliction of any description of punishment that was lawful in Saint Vincent immediately before 27th October 1969 (being the date on which Saint Vincent became an associated state).

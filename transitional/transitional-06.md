@@ -1,0 +1,3 @@
+# Transitional provision 6. Existing public officers
+Subject to the provisions of the Constitution, every person who immediately before the commencement of the Constitution holds or is acting in a public office under the former Constitution shall, as from the commencement of the Constitution, continue to hold or act in that office or the corresponding office established by the Constitution as if he had been appointed thereto in accordance with the provisions of the Constitution:
+Provided that any person who under the former Constitution or any other law in force immediately before such commencement would have been required to vacate his office at the expiration of any period shall vacate his office at the expiration of that period.
