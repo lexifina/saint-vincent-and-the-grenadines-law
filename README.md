@@ -1,41 +1,83 @@
 # Saint Vincent and the Grenadines: law history in git
 
+
+The law of Saint Vincent and the Grenadines as a git history: one file per section, one commit per version on the day it took effect, and the law that made each change as the commit's author. `git blame` names the law behind every line; `git log` lists every change to a section; picking a date gives the text in force that day. Each part here has one version so far, the text as made in 1979.
+
 Part of [lexifina/global-law](https://github.com/lexifina/global-law), one git history for every country's law: this is Saint Vincent and the Grenadines' national law, which global-law reads at `saint-vincent-and-the-grenadines/national/acts/`.
 
-The law of Saint Vincent and the Grenadines as a git history: one file per provision, one commit per law on the day it took effect, and the law that made each change as the commit's author. `git blame` names the law behind every paragraph; `git log` lists every change; picking a date gives the text in force that day.
+**What is in it now:** one law, the Saint Vincent Constitution Order 1979 (S.I. 1979/916), as made, in three parts with 121 provisions: the Constitution (Schedule 1: the preamble, sections 1 to 105 and its Schedule), the transitional provisions (Schedule 2, paragraphs 1 to 13) and the Order's own articles 1 to 3. [`data/laws.csv`](data/laws.csv) gives the Order's days; each folder's `README.md` lists its provisions.
 
-It follows the shared design of [lexifina/global-law](https://github.com/lexifina/global-law).
+Each part is a folder, one file per section or paragraph: `constitution/sec-010.md` is section 10 of the Constitution, protection of freedom of expression; `transitional/transitional-13.md` is transitional paragraph 13; `order/articles.md` holds the Order's three articles.
 
-## What this repository holds
+The text is in English, as the Order was made. legislation.gov.uk has it only as a scanned PDF, so it was read by Tesseract OCR (software, not a language model) and spot-checked against the scan, not proof-read word by word; small slips are possible, and the original governs.
 
-The Constitution of Saint Vincent and the Grenadines as made by the Saint Vincent Constitution Order 1979 (S.I. 1979/916), with the Order's own articles and its transitional provisions. English, the original language of the Order.
+## Questions as git commands
 
-**The text was read by OCR.** legislation.gov.uk publishes the Order, as made, only as a scanned image PDF with no text layer, so the text here was read from the scan by Tesseract OCR (software, not a language model), with headers, marginal notes and footnotes removed. It was spot-checked against the scan but not proof-read word by word, so small slips are possible. One line the OCR missed (the opening of transitional provision 13) was restored by hand from the scan. The original governs.
+| Question | Command |
+| --- | --- |
+| Every change to section 10 of the Constitution | `git log -p --word-diff -- constitution/sec-010.md` |
+| Which law wrote each line of section 10? | `git blame constitution/sec-010.md` |
+| Every version of the Constitution, with the day each took effect | `git log --format="%h %(trailers:key=In-force,valueonly,separator=) %an" -- constitution ':!*/README.md'` |
+| Section 10 as the record holds it on 1 January 2026 | `python tools/on.py 2026-01-01 constitution 10` |
 
-| Folder | Act | Versions | History |
-| --- | --- | ---: | --- |
-| `constitution/` | The Constitution of Saint Vincent and the Grenadines (Schedule 1 to S.I. 1979/916): preamble, sections 1 to 105 and the Schedule | 1 | As made, in force 27 October 1979 |
-| `transitional/` | Transitional provisions (Schedule 2 to S.I. 1979/916), paragraphs 1 to 13 | 1 | As made, in force 27 October 1979 |
-| `order/` | The Saint Vincent Constitution Order 1979, articles 1 to 3 | 1 | As made, in force 27 October 1979 |
+**Outside git**, we also host this record publicly, for free:
 
-## Source
+- **[Ask Claude about Vincentian law](https://global-law.lexifina.com/v1/try_claude?country=saint-vincent-and-the-grenadines)**: opens Claude with a first question ready.
+- **[Ask ChatGPT](https://global-law.lexifina.com/v1/try_chatgpt?country=saint-vincent-and-the-grenadines)**: the same question in ChatGPT.
+- **[Call the API in your browser](https://global-law.lexifina.com/v1/search_law?query=freedom+of+expression&jurisdictions=saint-vincent-and-the-grenadines)**: a search of Vincentian law for "freedom of expression", returned as JSON. See the [documentation here](https://lexifina.com/api/global-law).
 
-The National Archives, legislation.gov.uk: The Saint Vincent Constitution Order 1979 (S.I. 1979/916), as made (https://www.legislation.gov.uk/uksi/1979/916/made), image PDF retrieved 30 October 2026. Contains public sector information licensed under the Open Government Licence v3.0. The Government of Saint Vincent and the Grenadines' own site (legal.gov.vc) was unavailable when we tried it, so this UK copy is the source of the text.
+Both assistants read the record through the free Global law connector (MCP, `https://global-law.lexifina.com/mcp`); the first time, the chat gives you the link that adds it. Ask in English.
+
+**Host it yourself easily.** All it takes is git and Python, and the tools run on your machine:
+
+```sh
+git clone --depth 1 https://github.com/lexifina/global-law && cd global-law
+python3 tools/countries.py add saint-vincent-and-the-grenadines/national/acts
+python3 tools/law.py show 2026-01-01 saint-vincent-and-the-grenadines/national/acts/constitution/sec-010.md
+```
+
+Opened in Claude Code, Cursor, VS Code or Codex, the clone also starts a local MCP server with the same tools ([MCP.md](https://github.com/lexifina/global-law/blob/main/MCP.md)).
 
 ## Dates
 
-Every version is dated **27 October 1979**, the day the Order came into operation (article 1(2)) and the Constitution took effect. The Order was made on 26 July 1979 and the commits are credited to it (`si-1979-916`).
+Each commit is dated at noon, America/St_Vincent, on the day the version took effect, and carries it in its `In-force:` trailer; `Enacted:` gives the day the Order was made:
+
+- all three parts are dated 27 October 1979, the day the Order came into operation (article 1(2)) and the Constitution took effect; the Order was made on 26 July 1979;
+- since the text is the one made in 1979, that is the day the Constitution began; no amendment has a commit yet.
+
+Every version is credited to the Order, `S.I. 1979/916 <si-1979-916@nationalarchives.invalid>` (an address that cannot exist); the committer is Lexifina.
 
 ## How it is checked
 
-Every version is read back from git on the day it took effect and on the day before (`tools/check_repo.py`) and must match `corpus.json`; results are in `REPRODUCE.md`.
+- `tools/check_repo.py` reads every version back from git on the day it took effect and on the day before and compares it with the corpus it was built from; it also checks that every commit's trailers parse, that there are no merge commits and that no date goes backwards or lies in the future. [`REPRODUCE.md`](REPRODUCE.md) does not yet record a run for this build, nor a second build.
+- `REPRODUCE.md` gives the corpus's sha256 and the builder's hashes; [`data/versions.json`](data/versions.json) gives the source PDF's sha256.
+- The OCR repairs made by hand (one line restored from the scan, a few obvious slips corrected) are listed in `REPRODUCE.md`.
 
-## What "author" means
+## What it does not show
 
-The author of a commit is the law (or, for facts, the retrieval) that made the change, with an e-mail address that cannot exist (`<law key>@nationalarchives.invalid`). The committer is always Lexifina.
+- **Amendments.** Only the Constitution as made. Later Acts of Parliament amending it are not on legislation.gov.uk and are not here, so the text may differ from the Constitution as it reads today, and any later date still gives the 1979 text.
+- **The rest of Vincentian law.** No other Acts, no statutory rules and orders and no case law.
+- **All of the Order as printed.** Its explanatory note and the scan's footnotes are left out; marginal notes are replaced by the section titles of the Order's own arrangement of sections.
 
-## Limits
+## Sources
 
-- Only the Constitution as made. Later amendments by Acts of the Parliament of Saint Vincent and the Grenadines are not on legislation.gov.uk and are not in this record, so the text may differ from the Constitution as it reads today.
-- The Order's explanatory note and the footnotes of the scan are left out; marginal notes are replaced by the section titles of the Order's own arrangement of sections.
-- OCR limits as described above.
+| Source | Kind | Past versions | Notes |
+| --- | --- | --- | --- |
+| [legislation.gov.uk](https://www.legislation.gov.uk/uksi/1979/916/made) (The National Archives) | UK official legislation site: S.I. 1979/916, as made | no, as made only, as a scanned PDF | Read by OCR; the Government's own site (legal.gov.vc) was unavailable when tried |
+
+## Licence
+
+See [`LICENSE`](LICENSE). The text contains public sector information licensed under the Open Government Licence v3.0; Lexifina's own contributions (the arrangement of the history, the commit messages, the tables and the tools) are dedicated to the public domain under CC0 1.0.
+
+No AI model wrote, translated or corrected legal text, and no model runs when the history is built; the scripts were written by an AI model (see [`REPRODUCE.md`](REPRODUCE.md)).
+
+## More
+
+From [lexifina/global-law](https://github.com/lexifina/global-law):
+
+- [FEATURES.md](https://github.com/lexifina/global-law/blob/main/FEATURES.md): every feature, and what every corpus must support (`git blame`, `law.py`, the MCP tools)
+- [FAQ.md](https://github.com/lexifina/global-law/blob/main/FAQ.md): questions and answers · [CONTRIBUTING.md](https://github.com/lexifina/global-law/blob/main/CONTRIBUTING.md): proposing changes · [MCP.md](https://github.com/lexifina/global-law/blob/main/MCP.md): the MCP server · [REPRODUCE.md](https://github.com/lexifina/global-law/blob/main/REPRODUCE.md): how it was built · [CHANGELOG.md](https://github.com/lexifina/global-law/blob/main/CHANGELOG.md)
+- [FRESHNESS.md](https://github.com/lexifina/global-law/blob/main/FRESHNESS.md): how current each corpus is · [Monitoring](https://github.com/lexifina/global-law/tree/main/monitoring): whether updates are running · [WATCHING.md](https://github.com/lexifina/global-law/blob/main/WATCHING.md): how each official source is watched for changes
+- [performance/](https://github.com/lexifina/global-law/tree/main/performance): how fast the tools are, measured
+- [visualisations/](https://github.com/lexifina/global-law/tree/main/visualisations): charts and bridges across the world's law
+- [Vulnerabilities](https://github.com/lexifina/global-law/tree/main/vulnerabilities): mistakes in legislation as published
