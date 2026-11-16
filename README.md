@@ -57,6 +57,7 @@ Every version is credited to the Order, `S.I. 1979/916 <si-1979-916@nationalarch
 - `tools/check_repo.py` reads every version back from git on the day it took effect and on the day before and compares it with the corpus it was built from; it also checks that every commit's trailers parse, that there are no merge commits and that no date goes backwards or lies in the future. [`REPRODUCE.md`](REPRODUCE.md) does not yet record a run for this build, nor a second build.
 - `REPRODUCE.md` gives the corpus's sha256 and the builder's hashes; [`data/versions.json`](data/versions.json) gives the source PDF's sha256.
 - The OCR repairs made by hand (one line restored from the scan, a few obvious slips corrected) are listed in `REPRODUCE.md`.
+- [vulnerabilities/](vulnerabilities/): possible drafting mistakes in this law, found by global-law's detectors and checked by hand. Not run yet.
 
 ## What it does not show
 
@@ -75,6 +76,10 @@ Every version is credited to the Order, `S.I. 1979/916 <si-1979-916@nationalarch
 See [`LICENSE`](LICENSE). The text contains public sector information licensed under the Open Government Licence v3.0; Lexifina's own contributions (the arrangement of the history, the commit messages, the tables and the tools) are dedicated to the public domain under CC0 1.0.
 
 No AI model wrote, translated or corrected legal text, and no model runs when the history is built; the scripts were written by an AI model (see [`REPRODUCE.md`](REPRODUCE.md)).
+
+## Visualisations
+
+- [visualisations/](visualisations/): charts drawn from this repository. Not drawn yet.
 
 ## More
 
